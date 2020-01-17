@@ -8,7 +8,6 @@ export interface ClockPointerProps extends WithStyles<typeof styles> {
   hasSelected: boolean;
   isInner: boolean;
   type: ClockViewType;
-  limits: number[];
 }
 
 export class ClockPointer extends React.Component<ClockPointerProps> {
