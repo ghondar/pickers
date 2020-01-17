@@ -1,7 +1,7 @@
 {
   "name": "@ghondar/pickers",
-  "version": "3.2.9",
-  "private": true,
+  "version": "3.3.0",
+  "private": false,
   "description": "React components, that implements material design pickers for ghondar v4",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
@@ -67,7 +67,7 @@
     "build:typescript": "tsc --project tsconfig.json",
     "build": "yarn build:typescript && yarn build:bundle && yarn build:copy",
     "build:analyze": "yarn build",
-    "release": "yarn test && yarn version && yarn build && yarn publish --non-interactive build"
+    "release": "yarn test && yarn version && yarn build && yarn publish --non-interactive build --access public"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
