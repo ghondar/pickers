@@ -21,6 +21,7 @@ function useDefaultProps({
   format,
   openTo = 'hours',
   views = ['hours', 'minutes'],
+  limits = [],
 }: TimePickerProps) {
   const utils = useUtils();
 
@@ -28,6 +29,7 @@ function useDefaultProps({
     ...timePickerDefaultProps,
     views,
     openTo,
+    limits,
     refuse: ampm ? /[^\dap]+/gi : /[^\d]+/gi,
     format: pick12hOr24hFormat(format, ampm, {
       '12h': utils.formats.fullTime12h,

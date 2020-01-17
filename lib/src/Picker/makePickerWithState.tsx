@@ -43,6 +43,7 @@ export function makePickerWithStateAndWrapper<
       ampm,
       ampmInClock,
       autoOk,
+      limits,
       dateRangeIcon,
       disableFuture,
       disablePast,
@@ -105,6 +106,7 @@ export function makePickerWithStateAndWrapper<
       >
         <Picker
           {...pickerProps}
+          limits={limits}
           DateInputProps={{ ...inputProps, ...restPropsForTextField }}
           title={title}
           allowKeyboardControl={allowKeyboardControl}

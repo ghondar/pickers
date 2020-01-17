@@ -954,6 +954,21 @@
         "name": "boolean"
       }
     },
+    "limits": {
+      "defaultValue": {
+        "value": "[]"
+      },
+      "description": "Hide hour number to limite range",
+      "name": "limits",
+      "parent": {
+        "fileName": "material-ui-pickers/lib/src/views/Clock/ClockView.tsx",
+        "name": "BaseClockViewProps"
+      },
+      "required": false,
+      "type": {
+        "name": "number[]"
+      }
+    },
     "views": {
       "defaultValue": null,
       "description": "Array of views to show",
@@ -1942,6 +1957,21 @@
         "name": "boolean"
       }
     },
+    "limits": {
+      "defaultValue": {
+        "value": "[]"
+      },
+      "description": "Hide hour number to limite range",
+      "name": "limits",
+      "parent": {
+        "fileName": "material-ui-pickers/lib/src/views/Clock/ClockView.tsx",
+        "name": "BaseClockViewProps"
+      },
+      "required": false,
+      "type": {
+        "name": "number[]"
+      }
+    },
     "onYearChange": {
       "defaultValue": null,
       "description": "Callback firing on year change",
@@ -2475,6 +2505,21 @@
       "required": false,
       "type": {
         "name": "boolean"
+      }
+    },
+    "limits": {
+      "defaultValue": {
+        "value": null
+      },
+      "description": "Hide hour number to limite range",
+      "name": "limits",
+      "parent": {
+        "fileName": "material-ui-pickers/lib/src/views/Clock/ClockView.tsx",
+        "name": "BaseClockViewProps"
+      },
+      "required": false,
+      "type": {
+        "name": "number[]"
       }
     }
   }

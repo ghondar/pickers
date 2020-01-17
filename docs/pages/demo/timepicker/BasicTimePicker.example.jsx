@@ -18,6 +18,7 @@ function BasicTimePicker() {
         mask="__:__"
         label="24 hours"
         value={selectedDate}
+        limits={[3, 5, 6, 7]}
         onChange={date => handleDateChange(date)}
       />
     </Fragment>

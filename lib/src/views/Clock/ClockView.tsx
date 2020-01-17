@@ -22,6 +22,11 @@ export interface BaseClockViewProps {
    * @default false
    */
   ampmInClock?: boolean;
+  /**
+   * Hide hour number to limite range
+   * @default []
+   */
+  limits?: number[];
 }
 
 export interface ClockViewProps extends BaseClockViewProps {
@@ -49,6 +54,7 @@ export const ClockView: React.FC<ClockViewProps> = ({
   date,
   minutesStep,
   ampmInClock,
+  limits = [],
 }) => {
   const utils = useUtils();
   const viewProps = React.useMemo(() => {
@@ -56,17 +62,19 @@ export const ClockView: React.FC<ClockViewProps> = ({
       case 'hours':
         return {
           value: utils.getHours(date),
-          children: getHourNumbers({ date, utils, ampm: Boolean(ampm) }),
+          children: getHourNumbers({ date, utils, ampm: Boolean(ampm), limits }),
           onChange: (value: number, isFinish?: boolean) => {
-            const currentMeridiem = getMeridiem(date, utils);
-            const updatedTimeWithMeridiem = convertToMeridiem(
-              utils.setHours(date, value),
-              currentMeridiem,
-              Boolean(ampm),
-              utils
-            );
+            if (!limits.includes(value)) {
+              const currentMeridiem = getMeridiem(date, utils);
+              const updatedTimeWithMeridiem = convertToMeridiem(
+                utils.setHours(date, value),
+                currentMeridiem,
+                Boolean(ampm),
+                utils
+              );
 
-            onHourChange(updatedTimeWithMeridiem, isFinish);
+              onHourChange(updatedTimeWithMeridiem, isFinish);
+            }
           },
         };
 
@@ -97,7 +105,7 @@ export const ClockView: React.FC<ClockViewProps> = ({
       default:
         throw new Error('You must provide the type for ClockView');
     }
-  }, [ampm, date, onHourChange, onMinutesChange, onSecondsChange, type, utils]);
+  }, [ampm, date, limits, onHourChange, onMinutesChange, onSecondsChange, type, utils]);
 
   return (
     <Clock
@@ -117,6 +125,7 @@ ClockView.displayName = 'ClockView';
 // @ts-ignore
 ClockView.propTypes = {
   date: PropTypes.object.isRequired,
+  limits: PropTypes.array,
   onHourChange: PropTypes.func.isRequired,
   onMinutesChange: PropTypes.func.isRequired,
   onSecondsChange: PropTypes.func.isRequired,

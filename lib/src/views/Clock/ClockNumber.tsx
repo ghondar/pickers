@@ -34,6 +34,7 @@ export interface ClockNumberProps {
   index: number;
   label: string;
   selected: boolean;
+  style?: Record<string, number>;
   isInner?: boolean;
 }
 
@@ -63,7 +64,13 @@ export const useStyles = makeStyles(
   { name: 'MuiPickersClockNumber' }
 );
 
-export const ClockNumber: React.FC<ClockNumberProps> = ({ selected, label, index, isInner }) => {
+export const ClockNumber: React.FC<ClockNumberProps> = ({
+  selected,
+  label,
+  index,
+  isInner,
+  style,
+}) => {
   const classes = useStyles();
   const className = clsx(classes.clockNumber, {
     [classes.clockNumberSelected]: selected,
@@ -82,7 +89,7 @@ export const ClockNumber: React.FC<ClockNumberProps> = ({ selected, label, index
       component="span"
       className={className}
       variant={isInner ? 'body2' : 'body1'}
-      style={transformStyle}
+      style={{ ...transformStyle, ...style }}
       children={label}
     />
   );

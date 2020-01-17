@@ -7,10 +7,12 @@ export const getHourNumbers = ({
   ampm,
   utils,
   date,
+  limits = [],
 }: {
   ampm: boolean;
   utils: IUtils<MaterialUiPickersDate>;
   date: MaterialUiPickersDate;
+  limits?: number[];
 }) => {
   const currentHours = utils.getHours(date);
 
@@ -37,14 +39,15 @@ export const getHourNumbers = ({
       label = '00';
     }
 
+    let propStyle = {};
+    if (limits.includes(hour)) propStyle = { style: { color: 'grey' } };
     const props = {
       index: hour,
       label: utils.formatNumber(label),
       selected: isSelected(hour),
       isInner: !ampm && (hour === 0 || hour > 12),
     };
-
-    hourNumbers.push(<ClockNumber key={hour} {...props} />);
+    hourNumbers.push(<ClockNumber key={hour} {...props} {...propStyle} />);
   }
 
   return hourNumbers;

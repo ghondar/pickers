@@ -98,6 +98,7 @@ export function Picker({
   DateInputProps,
   isMobileKeyboardViewOpen,
   toggleMobileKeyboardView,
+  limits,
   ...other
 }: PickerProps<PickerView>) {
   const classes = useStyles();
@@ -167,6 +168,7 @@ export function Picker({
             {(openView === 'hours' || openView === 'minutes' || openView === 'seconds') && (
               <ClockView
                 {...other}
+                limits={limits}
                 date={date}
                 type={openView as 'hours' | 'minutes' | 'seconds'}
                 onDateChange={onChange}
