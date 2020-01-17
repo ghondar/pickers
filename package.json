@@ -1,5 +1,5 @@
 {
-  "name": "@ghondar/pickers",
+  "name": "pickers",
   "version": "2.0.0",
   "description": "Material-ui pickers root package",
   "main": "index.js",

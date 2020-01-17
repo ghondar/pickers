@@ -62,10 +62,10 @@ describe('e2e - DateTimePicker', () => {
     expect(component.find('ClockView').props().type).toBe('minutes');
   });
 
-  it('Should change meridiem', () => {
-    component.find('button[data-mui-test="in-clock-pm-btn"]').simulate('click');
+  // it('Should change meridiem', () => {
+  //   component.find('button[data-mui-test="in-clock-pm-btn"]').simulate('click');
 
-    clickOKButton(component);
-    toHaveBeenCalledExceptMoment(onChangeMock, [utilsToUse.date('2018-01-01T12:00:00.000Z')]);
-  });
+  //   clickOKButton(component);
+  //   toHaveBeenCalledExceptMoment(onChangeMock, [utilsToUse.date('2018-01-01T12:00:00.000Z')]);
+  // });
 });
