@@ -1,14 +1,14 @@
 {
-  "name": "@material-ui/pickers",
+  "name": "@ghondar/pickers",
   "version": "3.2.8",
   "private": true,
-  "description": "React components, that implements material design pickers for material-ui v4",
+  "description": "React components, that implements material design pickers for ghondar v4",
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "keywords": [
-    "material-ui",
+    "ghondar",
     "pickers",
-    "@material-ui/pickers",
+    "@ghondar/pickers",
     "datepicker",
     "timepicker",
     "date-picker",
@@ -20,12 +20,12 @@
   "sideEffects": false,
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mui-org/material-ui-pickers/issues"
+    "url": "https://github.com/ghondar/pickers/issues"
   },
   "homepage": "https://material-ui-pickers.dev/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mui-org/material-ui-pickers"
+    "url": "https://github.com/ghondar/pickers"
   },
   "author": {
     "name": "Dmitriy Kovalenko",
