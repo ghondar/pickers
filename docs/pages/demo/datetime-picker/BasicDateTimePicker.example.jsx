@@ -3,6 +3,9 @@ import { DateTimePicker } from '@material-ui/pickers';
 
 function BasicDateTimePicker() {
   const [selectedDate, handleDateChange] = useState(new Date());
+  const limits = {
+    15: [[3, 5, 6, 7]],
+  };
 
   return (
     <Fragment>
@@ -10,6 +13,7 @@ function BasicDateTimePicker() {
         mask="____/__/__ __:__"
         label="DateTimePicker"
         variant="outlined"
+        limits={limits}
         value={selectedDate}
         onChange={handleDateChange}
       />
