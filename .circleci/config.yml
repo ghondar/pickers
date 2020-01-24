@@ -7,7 +7,7 @@ defaults: &js_defaults
       environment:
         ## this enables colors in the output
         TERM: xterm
-  working_directory: ~/material-ui-pickers
+  working_directory: ~/ghondar-pickers
 
 version: 2.1
 orbs:
