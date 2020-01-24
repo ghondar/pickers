@@ -1,59 +1,79 @@
 import { useUtils } from '../_shared/hooks/useUtils';
 import { TimePickerToolbar } from './TimePickerToolbar';
-import { BaseClockViewProps } from '../views/Clock/ClockView';
+import { PureDateInput } from '../_shared/PureDateInput';
+import { KeyboardDateInput } from '../_shared/KeyboardDateInput';
 import { timePickerDefaultProps } from '../constants/prop-types';
-import { ResponsiveWrapper } from '../wrappers/ResponsiveWrapper';
+import { usePickerState } from '../_shared/hooks/usePickerState';
 import { pick12hOr24hFormat } from '../_helpers/text-field-helper';
-import { ModalWrapper, InlineWrapper, StaticWrapper } from '../wrappers/Wrapper';
+import { useKeyboardPickerState } from '../_shared/hooks/useKeyboardPickerState';
 import {
-  WithDateInputProps,
-  WithViewsProps,
-  makePickerWithStateAndWrapper,
+  WithKeyboardInputProps,
+  makePickerWithState,
+  WithPureInputProps,
 } from '../Picker/makePickerWithState';
 
-export interface TimePickerProps
-  extends BaseClockViewProps,
-    WithViewsProps<'hours' | 'minutes' | 'seconds'>,
-    WithDateInputProps {}
+type TimePickerView = 'hours' | 'minutes' | 'seconds';
 
-function useDefaultProps({
-  ampm = false,
-  format,
-  openTo = 'hours',
-  views = ['hours', 'minutes'],
-  limits = [],
-}: TimePickerProps) {
+export interface BaseTimePickerProps {
+  /**
+   * 12h/24h view for hour selection clock
+   * @default true
+   */
+  ampm?: boolean;
+  /**
+   * Step over minutes
+   * @default 1
+   */
+  minutesStep?: number;
+}
+
+export interface TimePickerViewsProps extends BaseTimePickerProps {
+  /** Array of views to show */
+  views?: ('hours' | 'minutes' | 'seconds')[];
+  /** First view to show in timepicker */
+  openTo?: 'hours' | 'minutes' | 'seconds';
+}
+
+export type TimePickerProps = WithPureInputProps & TimePickerViewsProps;
+
+export type KeyboardTimePickerProps = WithKeyboardInputProps & TimePickerViewsProps;
+
+const defaultProps = {
+  ...timePickerDefaultProps,
+  openTo: 'hours' as TimePickerView,
+  views: ['hours', 'minutes'] as TimePickerView[],
+  limits: [],
+};
+
+function useOptions(props: TimePickerProps | KeyboardTimePickerProps) {
   const utils = useUtils();
 
   return {
-    ...timePickerDefaultProps,
-    views,
-    openTo,
-    limits,
-    refuse: ampm ? /[^\dap]+/gi : /[^\d]+/gi,
-    format: pick12hOr24hFormat(format, ampm, {
-      '12h': utils.formats.fullTime12h,
-      '24h': utils.formats.fullTime24h,
-    }),
+    getDefaultFormat: () =>
+      pick12hOr24hFormat(props.format, props.ampm, {
+        '12h': utils.time12hFormat,
+        '24h': utils.time24hFormat,
+      }),
   };
 }
 
-export const TimePicker = makePickerWithStateAndWrapper<TimePickerProps>(ResponsiveWrapper, {
-  useDefaultProps,
+export const TimePicker = makePickerWithState<TimePickerProps>({
+  useOptions,
+  Input: PureDateInput,
+  useState: usePickerState,
   DefaultToolbarComponent: TimePickerToolbar,
 });
 
-export const DesktopTimePicker = makePickerWithStateAndWrapper<TimePickerProps>(InlineWrapper, {
-  useDefaultProps,
+export const KeyboardTimePicker = makePickerWithState<KeyboardTimePickerProps>({
+  useOptions,
+  Input: KeyboardDateInput,
+  useState: useKeyboardPickerState,
   DefaultToolbarComponent: TimePickerToolbar,
+  getCustomProps: props => ({
+    refuse: props.ampm ? /[^\dap]+/gi : /[^\d]+/gi,
+  }),
 });
 
-export const MobileTimePicker = makePickerWithStateAndWrapper<TimePickerProps>(ModalWrapper, {
-  useDefaultProps,
-  DefaultToolbarComponent: TimePickerToolbar,
-});
+TimePicker.defaultProps = defaultProps;
 
-export const StaticTimePicker = makePickerWithStateAndWrapper<TimePickerProps>(StaticWrapper, {
-  useDefaultProps,
-  DefaultToolbarComponent: TimePickerToolbar,
-});
+KeyboardTimePicker.defaultProps = defaultProps;

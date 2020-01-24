@@ -42,7 +42,7 @@ const Docs: React.FC<WithRouterProps> = ({ router }) => {
       </Grid>
 
       <h4> Import </h4>
-      <Code language="jsx">{`import { ${componentName} } from '@material-ui/pickers'`}</Code>
+      <Code language="jsx">{`import { ${componentName} } from '@ghondar/pickers'`}</Code>
 
       <h4> Inheritance </h4>
       <Typography gutterBottom>
@@ -67,19 +67,10 @@ const Docs: React.FC<WithRouterProps> = ({ router }) => {
 
       {!internalComponents.includes(componentName) && (
         <>
-          <h4> Mobile Wrapper </h4>
-          <Typography gutterBottom>
-            Props available on mobile device with {componentName} or with `Mobile{componentName}`
-          </Typography>
+          <h4> Modal Wrapper </h4>
+          <Typography gutterBottom>Available only with variant "dialog" </Typography>
 
-          <PropTypesTable disableHeader src="MobileWrapper" />
-
-          <h4> Desktop Wrapper </h4>
-          <Typography gutterBottom>
-            Props available on mobile device with `{componentName}` or with `Desktop{componentName}`
-          </Typography>
-
-          <PropTypesTable disableHeader src="DesktopWrapper" />
+          <PropTypesTable disableHeader src="ModalWrapper" />
         </>
       )}
     </>

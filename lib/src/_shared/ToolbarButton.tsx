@@ -1,12 +1,15 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ToolbarText from './ToolbarText';
 import Button, { ButtonProps } from '@material-ui/core/Button';
-import { ExtendMui } from '../typings/helpers';
-import { makeStyles } from '@material-ui/core/styles';
+import { ExtendMui } from '../typings/extendMui';
 import { TypographyProps } from '@material-ui/core/Typography';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core/styles';
 
-export interface ToolbarButtonProps extends ExtendMui<ButtonProps, 'variant'> {
+export interface ToolbarButtonProps
+  extends ExtendMui<ButtonProps, 'variant'>,
+    WithStyles<typeof styles> {
   variant: TypographyProps['variant'];
   selected: boolean;
   label: string;
@@ -14,18 +17,8 @@ export interface ToolbarButtonProps extends ExtendMui<ButtonProps, 'variant'> {
   typographyClassName?: string;
 }
 
-export const useStyles = makeStyles(
-  {
-    toolbarBtn: {
-      padding: 0,
-      minWidth: '16px',
-      textTransform: 'none',
-    },
-  },
-  { name: 'MuiPickersToolbarButton' }
-);
-
 const ToolbarButton: React.FunctionComponent<ToolbarButtonProps> = ({
+  classes,
   className = null,
   label,
   selected,
@@ -34,8 +27,6 @@ const ToolbarButton: React.FunctionComponent<ToolbarButtonProps> = ({
   typographyClassName,
   ...other
 }) => {
-  const classes = useStyles();
-
   return (
     <Button variant="text" className={clsx(classes.toolbarBtn, className)} {...other}>
       <ToolbarText
@@ -49,4 +40,24 @@ const ToolbarButton: React.FunctionComponent<ToolbarButtonProps> = ({
   );
 };
 
-export default ToolbarButton;
+(ToolbarButton as any).propTypes = {
+  selected: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired,
+  classes: PropTypes.any.isRequired,
+  className: PropTypes.string,
+  innerRef: PropTypes.any,
+};
+
+ToolbarButton.defaultProps = {
+  className: '',
+};
+
+export const styles = createStyles({
+  toolbarBtn: {
+    padding: 0,
+    minWidth: '16px',
+    textTransform: 'none',
+  },
+});
+
+export default withStyles(styles, { name: 'MuiPickersToolbarButton' })(ToolbarButton);

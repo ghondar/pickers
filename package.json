@@ -1,5 +1,5 @@
 {
-  "name": "pickers",
+  "name": "@ghondar/pickers",
   "version": "2.0.0",
   "description": "Material-ui pickers root package",
   "main": "index.js",
@@ -12,9 +12,6 @@
     "lib",
     "docs"
   ],
-  "engines": {
-    "node": "12.x"
-  },
   "scripts": {
     "start": "yarn dev",
     "dev": "yarn workspace docs dev",
@@ -29,7 +26,6 @@
     "url": "git+https://github.com/ghondar/pickers.git"
   },
   "devDependencies": {
-    "@babel/runtime": "^7.7.5",
     "@typescript-eslint/eslint-plugin": "^1.6.0",
     "@typescript-eslint/parser": "^1.6.0",
     "eslint": "^5.16.0",
@@ -47,11 +43,11 @@
     }
   },
   "lint-staged": {
-    "lib/src/**/*.{ts,tsx}": [
+    "lib/**/*.{ts,tsx}": [
       "yarn docgen",
       "git add docs/prop-types.json"
     ],
-    "*.{js,jsx,ts,tsx,json,css,md,mdx}": [
+    "*.{js,jsx,ts,tsx,json,css,md}": [
       "prettier --write",
       "git add"
     ]
@@ -59,6 +55,7 @@
   "eslintIgnore": [
     "**/node_modules",
     "**/coverage",
+    "*.d.ts",
     "videos/",
     "**/build"
   ],

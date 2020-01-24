@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import ClockType from '../constants/ClockType';
 import ToolbarText from '../_shared/ToolbarText';
 import ToolbarButton from '../_shared/ToolbarButton';
 import PickerToolbar from '../_shared/PickerToolbar';
@@ -12,6 +13,12 @@ import { convertToMeridiem, getMeridiem } from '../_helpers/time-utils';
 
 export const useStyles = makeStyles(
   {
+    toolbarLandscape: {
+      flexWrap: 'wrap',
+    },
+    toolbarAmpmLeftPadding: {
+      paddingLeft: 50,
+    },
     separator: {
       margin: '0 4px 0 2px',
       cursor: 'default',
@@ -21,17 +28,17 @@ export const useStyles = makeStyles(
       justifyContent: 'flex-end',
       alignItems: 'flex-end',
     },
-    hourMinuteLabelLandscape: {
+    hourMinuteLabelAmpmLandscape: {
       marginTop: 'auto',
     },
     hourMinuteLabelReverse: {
       flexDirection: 'row-reverse',
     },
     ampmSelection: {
+      marginLeft: 20,
+      marginRight: -20,
       display: 'flex',
       flexDirection: 'column',
-      marginRight: 'auto',
-      marginLeft: 12,
     },
     ampmLandscape: {
       margin: '4px 0 auto',
@@ -39,11 +46,12 @@ export const useStyles = makeStyles(
       justifyContent: 'space-around',
       flexBasis: '100%',
     },
-    ampmLabel: {
-      fontSize: 17,
+    ampmSelectionWithSeconds: {
+      marginLeft: 15,
+      marginRight: 10,
     },
-    penIconLandscape: {
-      marginTop: 'auto',
+    ampmLabel: {
+      fontSize: 18,
     },
   },
   { name: 'MuiPickersTimePickerToolbar' }
@@ -52,7 +60,7 @@ export const useStyles = makeStyles(
 export function useMeridiemMode(
   date: MaterialUiPickersDate,
   ampm: boolean | undefined,
-  onChange: (date: MaterialUiPickersDate, isFinished?: boolean) => void
+  onChange: (date: MaterialUiPickersDate, isFinished?: boolean | undefined) => void
 ) {
   const utils = useUtils();
   const meridiemMode = getMeridiem(date, utils);
@@ -76,40 +84,34 @@ export const TimePickerToolbar: React.FC<ToolbarComponentProps> = ({
   onChange,
   isLandscape,
   setOpenView,
-  ampmInClock,
-  isMobileKeyboardViewOpen,
-  toggleMobileKeyboardView,
-  title = 'SELECT TIME',
 }) => {
   const utils = useUtils();
   const theme = useTheme();
   const classes = useStyles();
-  const showAmPmControl = ampm && !ampmInClock;
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(date, ampm, onChange);
 
-  const clockTypographyVariant = 'h3';
+  const clockTypographyVariant = isLandscape ? 'h3' : 'h2';
 
   return (
     <PickerToolbar
-      landscapeDirection="row"
-      title={title}
       isLandscape={isLandscape}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
-      penIconClassName={clsx({ [classes.penIconLandscape]: isLandscape })}
+      className={clsx({
+        [classes.toolbarLandscape]: isLandscape,
+        [classes.toolbarAmpmLeftPadding]: ampm && !isLandscape,
+      })}
     >
       <div
         className={clsx(classes.hourMinuteLabel, {
-          [classes.hourMinuteLabelLandscape]: isLandscape,
+          [classes.hourMinuteLabelAmpmLandscape]: ampm && isLandscape,
           [classes.hourMinuteLabelReverse]: theme.direction === 'rtl',
         })}
       >
         {arrayIncludes(views, 'hours') && (
           <ToolbarButton
             variant={clockTypographyVariant}
-            onClick={() => setOpenView('hours')}
-            selected={openView === 'hours'}
-            label={ampm ? utils.format(date, 'hours12h') : utils.format(date, 'hours24h')}
+            onClick={() => setOpenView(ClockType.HOURS)}
+            selected={openView === ClockType.HOURS}
+            label={utils.getHourText(date, Boolean(ampm))}
           />
         )}
 
@@ -125,9 +127,9 @@ export const TimePickerToolbar: React.FC<ToolbarComponentProps> = ({
         {arrayIncludes(views, 'minutes') && (
           <ToolbarButton
             variant={clockTypographyVariant}
-            onClick={() => setOpenView('minutes')}
-            selected={openView === 'minutes'}
-            label={utils.format(date, 'minutes')}
+            onClick={() => setOpenView(ClockType.MINUTES)}
+            selected={openView === ClockType.MINUTES}
+            label={utils.getMinuteText(date)}
           />
         )}
 
@@ -137,24 +139,24 @@ export const TimePickerToolbar: React.FC<ToolbarComponentProps> = ({
 
         {arrayIncludes(views, 'seconds') && (
           <ToolbarButton
-            variant={clockTypographyVariant}
-            onClick={() => setOpenView('seconds')}
-            selected={openView === 'seconds'}
-            label={utils.format(date, 'seconds')}
+            variant="h2"
+            onClick={() => setOpenView(ClockType.SECONDS)}
+            selected={openView === ClockType.SECONDS}
+            label={utils.getSecondText(date)}
           />
         )}
       </div>
 
-      {showAmPmControl && (
+      {ampm && (
         <div
           className={clsx(classes.ampmSelection, {
             [classes.ampmLandscape]: isLandscape,
+            [classes.ampmSelectionWithSeconds]: arrayIncludes(views, 'seconds'),
           })}
         >
           <ToolbarButton
-            data-mui-test="toolbar-am-btn"
             disableRipple
-            variant="subtitle2"
+            variant="subtitle1"
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
             label={utils.getMeridiemText('am')}
@@ -162,9 +164,8 @@ export const TimePickerToolbar: React.FC<ToolbarComponentProps> = ({
           />
 
           <ToolbarButton
-            data-mui-test="toolbar-pm-btn"
             disableRipple
-            variant="subtitle2"
+            variant="subtitle1"
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
             label={utils.getMeridiemText('pm')}

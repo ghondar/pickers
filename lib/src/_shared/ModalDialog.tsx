@@ -4,8 +4,8 @@ import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
-import { makeStyles } from '@material-ui/core/styles';
 import { DIALOG_WIDTH, DIALOG_WIDTH_WIDER } from '../constants/dimensions';
+import { createStyles, WithStyles, withStyles } from '@material-ui/core/styles';
 
 export interface ModalDialogProps extends DialogProps {
   onAccept: () => void;
@@ -22,34 +22,9 @@ export interface ModalDialogProps extends DialogProps {
   wider?: boolean;
 }
 
-export const useStyles = makeStyles(
-  {
-    dialogRoot: {
-      minWidth: DIALOG_WIDTH,
-    },
-    dialogRootWider: {
-      minWidth: DIALOG_WIDTH_WIDER,
-    },
-    dialog: {
-      '&:first-child': {
-        padding: 0,
-      },
-    },
-    withAdditionalAction: {
-      // set justifyContent to default value to fix IE11 layout bug
-      // see https://github.com/dmtrKovalenko/material-ui-pickers/pull/267
-      justifyContent: 'flex-start',
-
-      '& > *:first-child': {
-        marginRight: 'auto',
-      },
-    },
-  },
-  { name: 'MuiPickersModal' }
-);
-
-export const ModalDialog: React.FC<ModalDialogProps> = ({
+export const ModalDialog: React.SFC<ModalDialogProps & WithStyles<typeof styles>> = ({
   children,
+  classes,
   onAccept,
   onDismiss,
   onClear,
@@ -63,53 +38,76 @@ export const ModalDialog: React.FC<ModalDialogProps> = ({
   showTabs,
   wider,
   ...other
-}) => {
-  const classes = useStyles();
-  return (
-    <Dialog
-      onClose={onDismiss}
+}) => (
+  <Dialog
+    role="dialog"
+    onClose={onDismiss}
+    classes={{
+      paper: clsx(classes.dialogRoot, {
+        [classes.dialogRootWider]: wider,
+      }),
+    }}
+    {...other}
+  >
+    <DialogContent children={children} className={classes.dialog} />
+
+    <DialogActions
       classes={{
-        paper: clsx(classes.dialogRoot, {
-          [classes.dialogRootWider]: wider,
+        root: clsx({
+          [classes.withAdditionalAction]: clearable || showTodayButton,
         }),
       }}
-      {...other}
     >
-      <DialogContent children={children} className={classes.dialog} />
+      {clearable && (
+        <Button color="primary" onClick={onClear}>
+          {clearLabel}
+        </Button>
+      )}
 
-      <DialogActions
-        className={clsx({
-          [classes.withAdditionalAction]: clearable || showTodayButton,
-        })}
-      >
-        {clearable && (
-          <Button color="primary" onClick={onClear}>
-            {clearLabel}
-          </Button>
-        )}
+      {showTodayButton && (
+        <Button color="primary" onClick={onSetToday}>
+          {todayLabel}
+        </Button>
+      )}
 
-        {showTodayButton && (
-          <Button color="primary" onClick={onSetToday}>
-            {todayLabel}
-          </Button>
-        )}
+      {cancelLabel && (
+        <Button color="primary" onClick={onDismiss}>
+          {cancelLabel}
+        </Button>
+      )}
 
-        {cancelLabel && (
-          <Button color="primary" onClick={onDismiss}>
-            {cancelLabel}
-          </Button>
-        )}
-
-        {okLabel && (
-          <Button color="primary" onClick={onAccept}>
-            {okLabel}
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
-  );
-};
+      {okLabel && (
+        <Button color="primary" onClick={onAccept}>
+          {okLabel}
+        </Button>
+      )}
+    </DialogActions>
+  </Dialog>
+);
 
 ModalDialog.displayName = 'ModalDialog';
 
-export default ModalDialog;
+export const styles = createStyles({
+  dialogRoot: {
+    minWidth: DIALOG_WIDTH,
+  },
+  dialogRootWider: {
+    minWidth: DIALOG_WIDTH_WIDER,
+  },
+  dialog: {
+    '&:first-child': {
+      padding: 0,
+    },
+  },
+  withAdditionalAction: {
+    // set justifyContent to default value to fix IE11 layout bug
+    // see https://github.com/dmtrKovalenko/material-ui-pickers/pull/267
+    justifyContent: 'flex-start',
+
+    '& > *:first-child': {
+      marginRight: 'auto',
+    },
+  },
+});
+
+export default withStyles(styles, { name: 'MuiPickersModal' })(ModalDialog);

@@ -2,12 +2,7 @@ import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import React, { useState } from 'react';
 import JalaliUtils from '@date-io/jalaali';
-import {
-  TimePicker,
-  DateTimePicker,
-  DatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+import { TimePicker, DateTimePicker, DatePicker, MuiPickersUtilsProvider } from '@ghondar/pickers';
 
 jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
 

@@ -1,4 +1,5 @@
 import { MaterialUiPickersDate } from './date';
+import { WrapperVariant } from '../wrappers/Wrapper';
 import { ParsableDate } from '../constants/prop-types';
 import { ToolbarComponentProps } from '../Picker/Picker';
 
@@ -6,7 +7,7 @@ export interface BasePickerProps {
   /** Picker value */
   value: ParsableDate;
   /** onChange callback @DateIOType */
-  onChange: (date: MaterialUiPickersDate | null, keyboardInputValue?: string) => void;
+  onChange: (date: MaterialUiPickersDate) => void;
   /**
    * Auto accept date on selection
    * @default false
@@ -14,12 +15,22 @@ export interface BasePickerProps {
   autoOk?: boolean;
   /** Format string */
   format?: string;
-  /** Disable picker and text field */
+  /** Disable datepicker and text field */
   disabled?: boolean;
-  /** Make picker read only */
-  readOnly?: boolean;
+  /** Dynamic formatter of text field value @DateIOType */
+  labelFunc?: (date: MaterialUiPickersDate, invalidLabel: string) => string;
   /** Date that will be initially highlighted if null was passed */
   initialFocusedDate?: ParsableDate;
+  /**
+   * Message displaying in text field if date is invalid (doesn't work in keyboard mode)
+   * @default 'unknown'
+   */
+  invalidLabel?: string;
+  /**
+   * Message displaying in text field, if null passed (doesn't work in keyboard mode)
+   * @default ' '
+   */
+  emptyLabel?: string;
   /** Callback fired when date is accepted @DateIOType */
   onAccept?: (date: MaterialUiPickersDate) => void;
   /** Callback fired when new error should be displayed
@@ -33,21 +44,16 @@ export interface BasePickerProps {
   /** Controlled picker open state */
   open?: boolean;
   /**
-   * Show toolbar even in desktop mode
+   * Hide toolbar and show only date/time views
+   * @default false
    */
-  showToolbar?: boolean;
-  /** Force rendering in particular orientation */
+  disableToolbar?: boolean;
+  /**
+   * Force rendering in particular orientation
+   * @default "portrait"
+   */
   orientation?: 'portrait' | 'landscape';
   /** Component that will replace default toolbar renderer */
   ToolbarComponent?: React.ComponentType<ToolbarComponentProps>;
-  /**
-   * Mobile picker title, displaying in the toolbar
-   * @default "SELECT DATE"
-   */
-  title?: string;
-  /**
-   * Compare dates by the exact timestamp, instead of start/end of date
-   * @default false
-   */
-  strictCompareDates?: boolean;
+  variant?: WrapperVariant;
 }

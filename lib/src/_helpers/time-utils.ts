@@ -1,24 +1,24 @@
 import { IUtils } from '@date-io/core/IUtils';
 import { MaterialUiPickersDate } from '../typings/date';
 
-const clockCenter = {
+const center = {
   x: 260 / 2,
   y: 260 / 2,
 };
 
-const baseClockPoint = {
-  x: clockCenter.x,
+const basePoint = {
+  x: center.x,
   y: 0,
 };
 
-const cx = baseClockPoint.x - clockCenter.x;
-const cy = baseClockPoint.y - clockCenter.y;
+const cx = basePoint.x - center.x;
+const cy = basePoint.y - center.y;
 
 const rad2deg = (rad: number) => rad * 57.29577951308232;
 
 const getAngleValue = (step: number, offsetX: number, offsetY: number) => {
-  const x = offsetX - clockCenter.x;
-  const y = offsetY - clockCenter.y;
+  const x = offsetX - center.x;
+  const y = offsetY - center.y;
 
   const atan = Math.atan2(cx, cy) - Math.atan2(x, y);
 

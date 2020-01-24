@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { useIsomorphicEffect } from './useKeyDown';
-import { arrayIncludes } from '../../_helpers/utils';
-import { DateTimePickerView } from '../../DateTimePicker';
 import { BasePickerProps } from '../../typings/BasePicker';
 
 const getOrientation = () => {
@@ -21,10 +19,7 @@ const getOrientation = () => {
   return 'portrait';
 };
 
-export function useIsLandscape(
-  views: DateTimePickerView[],
-  customOrientation?: BasePickerProps['orientation']
-): boolean {
+export function useIsLandscape(customOrientation?: BasePickerProps['orientation']) {
   const [orientation, setOrientation] = React.useState<BasePickerProps['orientation']>(
     getOrientation()
   );
@@ -35,11 +30,6 @@ export function useIsLandscape(
     window.addEventListener('orientationchange', eventHandler);
     return () => window.removeEventListener('orientationchange', eventHandler);
   }, [eventHandler]);
-
-  if (arrayIncludes(views, ['hours', 'minutes', 'seconds'])) {
-    // could not display 13:34:44 in landscape mode
-    return false;
-  }
 
   const orientationToUse = customOrientation || orientation;
   return orientationToUse === 'landscape';

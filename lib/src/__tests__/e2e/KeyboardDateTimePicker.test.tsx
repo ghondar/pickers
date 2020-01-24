@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
 import { mount, utilsToUse } from '../test-utils';
-import { DesktopDateTimePicker, DateTimePickerProps } from '../../DateTimePicker/DateTimePicker';
+import {
+  KeyboardDateTimePicker,
+  KeyboardDateTimePickerProps,
+} from '../../DateTimePicker/DateTimePicker';
 
 const format = process.env.UTILS === 'moment' ? 'MM/DD/YYYY HH:mm' : 'MM/dd/yyyy hh:mm';
 
-describe('e2e - DesktopDateTimePicker', () => {
-  let component: ReactWrapper<DateTimePickerProps>;
+describe('e2e - KeyboardDateTimePicker (inline)', () => {
+  let component: ReactWrapper<KeyboardDateTimePickerProps>;
   const onChangeMock = jest.fn();
   const onCloseMock = jest.fn();
   const onOpenMock = jest.fn();
@@ -14,9 +17,10 @@ describe('e2e - DesktopDateTimePicker', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     component = mount(
-      <DesktopDateTimePicker
+      <KeyboardDateTimePicker
         autoOk
-        variant="outlined"
+        variant="inline"
+        inputVariant="outlined"
         onChange={onChangeMock}
         onClose={onCloseMock}
         onOpen={onOpenMock}

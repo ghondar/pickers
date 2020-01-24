@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@ghondar/pickers';
 import { Button, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -19,6 +19,7 @@ function ControllingProgrammaticallyExample() {
       <Button onClick={() => setIsOpen(true)}> Open picker </Button>
 
       <DatePicker
+        variant="inline"
         open={isOpen}
         onOpen={() => setIsOpen(true)}
         onClose={() => setIsOpen(false)}

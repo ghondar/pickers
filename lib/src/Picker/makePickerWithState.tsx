@@ -1,61 +1,65 @@
 import * as React from 'react';
-import { MakeOptional } from '../typings/helpers';
-import { DateTimePickerView } from '../DateTimePicker';
 import { BasePickerProps } from '../typings/BasePicker';
-import { usePickerState } from '../_shared/hooks/usePickerState';
-import { ExportedDateInputProps } from '../_shared/PureDateInput';
+import { Picker, ToolbarComponentProps } from './Picker';
+import { ExtendWrapper, Wrapper } from '../wrappers/Wrapper';
+import { PureDateInputProps } from '../_shared/PureDateInput';
 import { DateValidationProps } from '../_helpers/text-field-helper';
-import { ResponsiveWrapperProps } from '../wrappers/ResponsiveWrapper';
-import { Picker, ToolbarComponentProps, PickerViewProps } from './Picker';
-import { SomeWrapper, ExtendWrapper, OmitInnerWrapperProps } from '../wrappers/Wrapper';
+import { KeyboardDateInputProps } from '../_shared/KeyboardDateInput';
+import { StateHookOptions, usePickerState } from '../_shared/hooks/usePickerState';
+import {
+  BaseKeyboardPickerProps,
+  useKeyboardPickerState,
+} from '../_shared/hooks/useKeyboardPickerState';
 
-export interface WithViewsProps<T extends DateTimePickerView> {
-  /**
-   * Array of views to show
-   */
-  views?: T[];
-  /** First view to show */
-  openTo?: T;
-}
+export type WithKeyboardInputProps = DateValidationProps &
+  BaseKeyboardPickerProps &
+  ExtendWrapper<KeyboardDateInputProps>;
 
-export type WithDateInputProps = DateValidationProps & BasePickerProps & ExportedDateInputProps;
+export type WithPureInputProps = DateValidationProps &
+  BasePickerProps &
+  ExtendWrapper<PureDateInputProps>;
 
-export interface MakePickerOptions<T extends unknown> {
-  useDefaultProps: (props: T) => Partial<T> & { format: string };
+export interface MakePickerOptions<T extends any> {
+  Input: any;
+  useState: typeof usePickerState | typeof useKeyboardPickerState;
+  useOptions: (props: any) => StateHookOptions;
+  getCustomProps?: (props: T) => Partial<T>;
   DefaultToolbarComponent: React.ComponentType<ToolbarComponentProps>;
 }
 
-type ExportedPickerProps = MakeOptional<PickerViewProps<any>, 'ToolbarComponent'>;
-
-export function makePickerWithStateAndWrapper<
-  T extends ExportedPickerProps & DateValidationProps & Pick<BasePickerProps, 'onChange' | 'value'>,
-  TWrapper extends SomeWrapper = any
->(
-  Wrapper: TWrapper,
-  { useDefaultProps, DefaultToolbarComponent }: MakePickerOptions<T>
-): React.FC<T & ExtendWrapper<TWrapper>> {
-  function PickerWithState(props: T & Partial<OmitInnerWrapperProps<ResponsiveWrapperProps>>) {
-    const defaultProps = useDefaultProps(props);
-    const allProps = { ...defaultProps, ...props };
-
+export function makePickerWithState<T extends any>({
+  Input,
+  useState,
+  useOptions,
+  getCustomProps,
+  DefaultToolbarComponent,
+}: MakePickerOptions<T>): React.FC<T> {
+  function PickerWithState(props: T) {
     const {
       allowKeyboardControl,
       ampm,
-      ampmInClock,
+      animateYearScrolling,
       autoOk,
       limits,
       dateRangeIcon,
       disableFuture,
       disablePast,
-      showToolbar,
+      disableToolbar,
+      emptyLabel,
       format,
+      forwardedRef,
       hideTabs,
       initialFocusedDate,
+      invalidDateMessage,
+      invalidLabel,
+      labelFunc,
       leftArrowButtonProps,
       leftArrowIcon,
       loadingIndicator,
       maxDate,
+      maxDateMessage,
       minDate,
+      minDateMessage,
       minutesStep,
       onAccept,
       onChange,
@@ -73,49 +77,35 @@ export function makePickerWithStateAndWrapper<
       timeIcon,
       ToolbarComponent = DefaultToolbarComponent,
       value,
+      variant,
       views,
-      title,
-      invalidDateMessage,
-      minDateMessage,
-      maxDateMessage,
-      // WrapperProps
-      clearable,
-      clearLabel,
-      DialogProps,
-      PopoverProps,
-      okLabel,
-      cancelLabel,
-      todayLabel,
-      ...restPropsForTextField
-    } = allProps;
+      ...other
+    } = props;
 
-    const { pickerProps, inputProps, wrapperProps } = usePickerState(allProps);
-    const WrapperComponent = Wrapper as SomeWrapper;
+    const injectedProps = getCustomProps ? getCustomProps(props) : {};
+
+    const options = useOptions(props);
+    const { pickerProps, inputProps, wrapperProps } = useState(props as any, options);
 
     return (
-      <WrapperComponent
-        clearable={clearable}
-        clearLabel={clearLabel}
-        DialogProps={DialogProps}
-        okLabel={okLabel}
-        todayLabel={todayLabel}
-        cancelLabel={cancelLabel}
+      <Wrapper
+        variant={variant}
+        InputComponent={Input}
         DateInputProps={inputProps}
+        {...injectedProps}
         {...wrapperProps}
-        {...restPropsForTextField}
+        {...other}
       >
         <Picker
           {...pickerProps}
           limits={limits}
-          DateInputProps={{ ...inputProps, ...restPropsForTextField }}
-          title={title}
           allowKeyboardControl={allowKeyboardControl}
           ampm={ampm}
-          ampmInClock={ampmInClock}
+          animateYearScrolling={animateYearScrolling}
           dateRangeIcon={dateRangeIcon}
           disableFuture={disableFuture}
           disablePast={disablePast}
-          showToolbar={showToolbar}
+          disableToolbar={disableToolbar}
           hideTabs={hideTabs}
           leftArrowButtonProps={leftArrowButtonProps}
           leftArrowIcon={leftArrowIcon}
@@ -136,7 +126,7 @@ export function makePickerWithStateAndWrapper<
           ToolbarComponent={ToolbarComponent}
           views={views}
         />
-      </WrapperComponent>
+      </Wrapper>
     );
   }
 

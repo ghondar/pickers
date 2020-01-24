@@ -1,12 +1,14 @@
 import * as React from 'react';
+import Grid from '@material-ui/core/Grid';
 import ToolbarText from '../_shared/ToolbarText';
 import PickerToolbar from '../_shared/PickerToolbar';
 import ToolbarButton from '../_shared/ToolbarButton';
 import DateTimePickerTabs from './DateTimePickerTabs';
 import { useUtils } from '../_shared/hooks/useUtils';
 import { DateTimePickerView } from './DateTimePicker';
-import { makeStyles } from '@material-ui/core/styles';
 import { ToolbarComponentProps } from '../Picker/Picker';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useMeridiemMode } from '../TimePicker/TimePickerToolbar';
 
 export const useStyles = makeStyles(
   _ => ({
@@ -18,20 +20,6 @@ export const useStyles = makeStyles(
     separator: {
       margin: '0 4px 0 2px',
       cursor: 'default',
-    },
-    timeContainer: {
-      display: 'flex',
-    },
-    dateContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-    timeTypography: {},
-    penIcon: {
-      position: 'absolute',
-      top: 8,
-      right: 8,
     },
   }),
   { name: 'MuiPickerDTToolbar' }
@@ -45,59 +33,81 @@ export const DateTimePickerToolbar: React.FC<ToolbarComponentProps> = ({
   hideTabs,
   dateRangeIcon,
   timeIcon,
-  isMobileKeyboardViewOpen,
-  toggleMobileKeyboardView,
-  title = 'SELECT DATE & TIME',
+  onChange,
 }) => {
   const utils = useUtils();
   const classes = useStyles();
   const showTabs = !hideTabs && typeof window !== 'undefined' && window.innerHeight > 667;
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(date, ampm, onChange);
+  const theme = useTheme();
+  const rtl = theme.direction === 'rtl';
 
   return (
     <>
-      <PickerToolbar
-        title={title}
-        isLandscape={false}
-        penIconClassName={classes.penIcon}
-        className={classes.toolbar}
-        isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-        toggleMobileKeyboardView={toggleMobileKeyboardView}
-      >
-        <div className={classes.dateContainer}>
-          <ToolbarButton
-            variant="subtitle1"
-            onClick={() => setOpenView('year')}
-            selected={openView === 'year'}
-            label={utils.format(date, 'year')}
-          />
+      <PickerToolbar isLandscape={false} className={classes.toolbar}>
+        <Grid container justify="center" wrap="nowrap">
+          <Grid item container xs={5} justify="flex-start" direction="column">
+            <div>
+              <ToolbarButton
+                variant="subtitle1"
+                onClick={() => setOpenView('year')}
+                selected={openView === 'year'}
+                label={utils.getYearText(date)}
+              />
+            </div>
+            <div>
+              <ToolbarButton
+                variant="h4"
+                onClick={() => setOpenView('date')}
+                selected={openView === 'date'}
+                label={utils.getDateTimePickerHeaderText(date)}
+              />
+            </div>
+          </Grid>
 
-          <ToolbarButton
-            variant="h4"
-            onClick={() => setOpenView('date')}
-            selected={openView === 'date'}
-            label={utils.format(date, 'shortDate')}
-          />
-        </div>
+          <Grid
+            item
+            container
+            xs={6}
+            justify="center"
+            alignItems="flex-end"
+            direction={rtl ? 'row-reverse' : 'row'}
+          >
+            <ToolbarButton
+              variant="h3"
+              onClick={() => setOpenView('hours')}
+              selected={openView === 'hours'}
+              label={utils.getHourText(date, ampm!)}
+            />
 
-        <div className={classes.timeContainer}>
-          <ToolbarButton
-            variant="h3"
-            onClick={() => setOpenView('hours')}
-            selected={openView === 'hours'}
-            label={ampm ? utils.format(date, 'hours12h') : utils.format(date, 'hours24h')}
-            typographyClassName={classes.timeTypography}
-          />
+            <ToolbarText variant="h3" label=":" className={classes.separator} />
 
-          <ToolbarText variant="h3" label=":" className={classes.separator} />
+            <ToolbarButton
+              variant="h3"
+              onClick={() => setOpenView('minutes')}
+              selected={openView === 'minutes'}
+              label={utils.getMinuteText(date)}
+            />
+          </Grid>
 
-          <ToolbarButton
-            variant="h3"
-            onClick={() => setOpenView('minutes')}
-            selected={openView === 'minutes'}
-            label={utils.format(date, 'minutes')}
-            typographyClassName={classes.timeTypography}
-          />
-        </div>
+          {ampm && (
+            <Grid item container xs={1} direction="column" justify="flex-end">
+              <ToolbarButton
+                variant="subtitle1"
+                selected={meridiemMode === 'am'}
+                label={utils.getMeridiemText('am')}
+                onClick={() => handleMeridiemChange('am')}
+              />
+
+              <ToolbarButton
+                variant="subtitle1"
+                selected={meridiemMode === 'pm'}
+                label={utils.getMeridiemText('pm')}
+                onClick={() => handleMeridiemChange('pm')}
+              />
+            </Grid>
+          )}
+        </Grid>
       </PickerToolbar>
 
       {showTabs && (

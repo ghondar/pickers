@@ -40,7 +40,7 @@ export interface ClockNumberProps {
 
 export const useStyles = makeStyles(
   theme => {
-    const size = 32;
+    const size = theme.spacing(4);
 
     return {
       clockNumber: {
@@ -48,7 +48,7 @@ export const useStyles = makeStyles(
         height: 32,
         userSelect: 'none',
         position: 'absolute',
-        left: `calc((100% - ${typeof size === 'number' ? `${size}px` : size}) / 2)`,
+        left: `calc(50% - ${size / 2}px)`,
         display: 'inline-flex',
         justifyContent: 'center',
         alignItems: 'center',

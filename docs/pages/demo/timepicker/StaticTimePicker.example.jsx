@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
-import { StaticTimePicker } from '@material-ui/pickers';
+import { TimePicker } from '@ghondar/pickers';
 
-const StaticTimePickerExample = () => {
-  const [date, handleDateChange] = useState(new Date());
+const StaticTimePicker = () => {
+  const [date, changeDate] = useState(new Date());
 
+  // prettier-ignore
   return (
     <>
-      <StaticTimePicker
+      <TimePicker
         autoOk
+        variant="static"
         openTo="hours"
         value={date}
-        onChange={date => handleDateChange(date)}
+        onChange={changeDate}
       />
 
-      <StaticTimePicker
-        ampm
+      <TimePicker
+        autoOk
+        ampm={false}
+        variant="static"
         orientation="landscape"
         openTo="minutes"
         value={date}
-        onChange={date => handleDateChange(date)}
+        onChange={changeDate}
       />
     </>
   );
 };
 
-export default StaticTimePickerExample;
+export default StaticTimePicker;

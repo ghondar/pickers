@@ -1,9 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import { ExtendMui } from '../typings/helpers';
-import { makeStyles } from '@material-ui/core/styles';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { ExtendMui } from '../typings/extendMui';
+import { makeStyles, fade } from '@material-ui/core/styles';
+
 export interface ToolbarTextProps extends ExtendMui<TypographyProps> {
   selected?: boolean;
   label: string;

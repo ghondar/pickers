@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
 import { clickOKButton } from './commands';
+import { TimePicker, TimePickerProps } from '../../TimePicker/TimePicker';
 import { mount, utilsToUse, toHaveBeenCalledExceptMoment } from '../test-utils';
-import { MobileTimePicker, TimePicker, TimePickerProps } from '../../TimePicker/TimePicker';
 
 const fakeTouchEvent = {
   buttons: 1,
@@ -19,12 +19,7 @@ describe('e2e - TimePicker', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     component = mount(
-      <MobileTimePicker
-        ampm
-        open
-        value={utilsToUse.date('2018-01-01T00:00:00.000')}
-        onChange={onChangeMock}
-      />
+      <TimePicker open value={utilsToUse.date('2018-01-01T00:00:00.000')} onChange={onChangeMock} />
     );
   });
 
@@ -38,7 +33,7 @@ describe('e2e - TimePicker', () => {
 
     expect(
       component
-        .find('ToolbarButton')
+        .find('WithStyles(ToolbarButton)')
         .at(0)
         .text()
     ).toBe('11');
@@ -46,7 +41,7 @@ describe('e2e - TimePicker', () => {
 
   it('Should change minutes (touch)', () => {
     component
-      .find('ToolbarButton')
+      .find('WithStyles(ToolbarButton)')
       .at(1)
       .simulate('click');
 
@@ -62,7 +57,7 @@ describe('e2e - TimePicker', () => {
 
     expect(
       component
-        .find('ToolbarButton')
+        .find('WithStyles(ToolbarButton)')
         .at(1)
         .text()
     ).toBe('53');
@@ -70,7 +65,7 @@ describe('e2e - TimePicker', () => {
 
   it('Should change meridiem mode', () => {
     component
-      .find('ToolbarButton')
+      .find('WithStyles(ToolbarButton)')
       .at(3)
       .simulate('click');
 
@@ -98,7 +93,7 @@ describe('e2e - TimePicker with seconds', () => {
   it('Should show seconds number', () => {
     expect(
       component
-        .find('ToolbarButton')
+        .find('WithStyles(ToolbarButton)')
         .at(2)
         .text()
     ).toBe('12');
@@ -106,7 +101,7 @@ describe('e2e - TimePicker with seconds', () => {
 
   it('Should change seconds', () => {
     component
-      .find('ToolbarButton')
+      .find('WithStyles(ToolbarButton)')
       .at(2)
       .simulate('click');
 

@@ -70,27 +70,23 @@ export const findClosestEnabledDate = ({
     }
   }
 
-  // fallback to today if no enabled days
-  return utils.date();
+  return null;
 };
 
-export const isYearOnlyView = (views: readonly DatePickerView[]) =>
+export const isYearOnlyView = (views: DatePickerView[]) =>
   views.length === 1 && views[0] === 'year';
 
-export const isYearAndMonthViews = (views: readonly DatePickerView[]) =>
+export const isYearAndMonthViews = (views: DatePickerView[]) =>
   views.length === 2 && arrayIncludes(views, 'month') && arrayIncludes(views, 'year');
 
-export const getFormatByViews = (
-  views: readonly DatePickerView[],
-  utils: IUtils<MaterialUiPickersDate>
-) => {
+export const getFormatByViews = (views: DatePickerView[], utils: IUtils<MaterialUiPickersDate>) => {
   if (isYearOnlyView(views)) {
-    return utils.formats.year;
+    return utils.yearFormat;
   }
 
   if (isYearAndMonthViews(views)) {
-    return utils.formats.monthAndYear;
+    return utils.yearMonthFormat;
   }
 
-  return utils.formats.keyboardDate;
+  return utils.dateFormat;
 };

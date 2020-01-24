@@ -67,7 +67,7 @@ jobs:
           command: yarn workspaces run build:typescript
       - run:
           name: Build and analyze bundlesize
-          command: yarn workspace @material-ui/pickers build:analyze
+          command: yarn workspace @ghondar/pickers build:analyze
 
   jest_tests:
     description: Running jest test with separate library

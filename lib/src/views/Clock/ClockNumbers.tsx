@@ -41,12 +41,14 @@ export const getHourNumbers = ({
 
     let propStyle = {};
     if (limits.includes(hour)) propStyle = { style: { color: 'grey' } };
+
     const props = {
       index: hour,
       label: utils.formatNumber(label),
       selected: isSelected(hour),
       isInner: !ampm && (hour === 0 || hour > 12),
     };
+
     hourNumbers.push(<ClockNumber key={hour} {...props} {...propStyle} />);
   }
 

@@ -7,9 +7,8 @@ export type SlideDirection = 'right' | 'left';
 interface SlideTransitionProps {
   transKey: React.Key;
   className?: string;
-  reduceAnimations: boolean;
   slideDirection: SlideDirection;
-  children: React.ReactElement;
+  children: React.ReactChild;
 }
 
 const animationDuration = 350;
@@ -24,7 +23,6 @@ export const useStyles = makeStyles(
       transitionContainer: {
         display: 'block',
         position: 'relative',
-        overflowX: 'hidden',
         '& > *': {
           position: 'absolute',
           top: 0,
@@ -65,15 +63,10 @@ export const useStyles = makeStyles(
 const SlideTransition: React.SFC<SlideTransitionProps> = ({
   children,
   transKey,
-  reduceAnimations,
   slideDirection,
   className = null,
 }) => {
   const classes = useStyles();
-  if (reduceAnimations) {
-    return children;
-  }
-
   const transitionClasses = {
     exit: classes.slideExit,
     enterActive: classes.slideEnterActive,

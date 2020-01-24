@@ -28,7 +28,7 @@ export const navItems = [
   {
     title: 'Components API',
     children: Object.keys(PropTypesDoc)
-      .filter(component => !component.match(/^(Mobile|Desktop|Static)/))
+      .filter(component => !['ModalWrapper'].includes(component))
       .map(component => ({
         title: component,
         as: `/api/${component}`,

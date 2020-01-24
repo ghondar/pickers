@@ -11,7 +11,7 @@ import { GITHUB_URL } from '_constants';
 import { createOverrides } from './styleOverrides';
 import { withRouter, WithRouterProps } from 'next/router';
 import { utilsMap, UtilsLib } from '../utils/utilsService';
-import { withStyles, WithStyles, createStyles } from '@material-ui/core/styles';
+import { withStyles, WithStyles, createStyles } from '@material-ui/styles';
 import {
   Hidden,
   Drawer,
@@ -152,7 +152,7 @@ class Layout extends Component<LayoutProps> {
                   key={option}
                   className={classes.utilsMenuItem}
                   selected={index === this.state.selectedIndex}
-                  onClick={(event: any) => this.handleUtilsChange(event, index)}
+                  onClick={event => this.handleUtilsChange(event, index)}
                 >
                   {option}
                 </MenuItem>
@@ -160,11 +160,7 @@ class Layout extends Component<LayoutProps> {
             </Menu>
 
             <Tooltip title="Toggle light/dark theme" enterDelay={300}>
-              <IconButton
-                data-mui-test="toggle-theme-btn"
-                color="inherit"
-                onClick={toggleThemeType}
-              >
+              <IconButton data-testid="toggle-theme-btn" color="inherit" onClick={toggleThemeType}>
                 <LightbulbOutlineIcon />
               </IconButton>
             </Tooltip>

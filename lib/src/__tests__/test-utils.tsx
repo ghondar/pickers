@@ -4,14 +4,7 @@ import LuxonUtils from '@date-io/luxon';
 import MomentUtils from '@date-io/moment';
 import DateFnsUtils from '@date-io/date-fns';
 import MuiPickersUtilsProvider from '../MuiPickersUtilsProvider';
-import { IUtils } from '@date-io/core/IUtils';
-import { createMuiTheme } from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { MaterialUiPickersDate } from '../typings/date';
-
-interface WithUtilsProps {
-  utils: IUtils<MaterialUiPickersDate>;
-}
+import { WithUtilsProps } from '../_shared/WithUtils';
 
 const getUtilClass = () => {
   switch (process.env.UTILS) {
@@ -27,7 +20,7 @@ const getUtilClass = () => {
 };
 
 export const UtilClassToUse: any = getUtilClass();
-export const utilsToUse: IUtils<MaterialUiPickersDate> = new UtilClassToUse();
+export const utilsToUse = new UtilClassToUse();
 
 const getComponentWithUtils = <P extends WithUtilsProps>(element: React.ReactElement<P>) =>
   React.cloneElement(element, { utils: utilsToUse } as any);
@@ -36,11 +29,7 @@ export const shallow = <P extends WithUtilsProps>(element: React.ReactElement<P>
   enzyme.shallow(getComponentWithUtils(element));
 
 export const mount = <P extends WithUtilsProps>(element: React.ReactElement<P>) =>
-  enzyme.mount(
-    <ThemeProvider theme={createMuiTheme()}>
-      <MuiPickersUtilsProvider utils={UtilClassToUse}>{element}</MuiPickersUtilsProvider>
-    </ThemeProvider>
-  );
+  enzyme.mount(<MuiPickersUtilsProvider utils={UtilClassToUse}>{element}</MuiPickersUtilsProvider>);
 
 export const shallowRender = (render: (props: any) => React.ReactElement<any>) => {
   return enzyme.shallow(render({ utils: utilsToUse, classes: {} as any, theme: {} as any }));

@@ -1,22 +1,17 @@
+import { Omit } from './utils';
+import { DatePickerProps } from '..';
 import { IUtils } from '@date-io/core/IUtils';
-import { DatePickerProps } from '../DatePicker';
 import { ParsableDate } from '../constants/prop-types';
-import { MaterialUiPickersDate } from '../typings/date';
-import { DateInputProps } from '../_shared/PureDateInput';
+import { BasePickerProps } from '../typings/BasePicker';
 
 export const getDisplayDate = (
   value: ParsableDate,
-  utils: IUtils<MaterialUiPickersDate>,
-  {
-    format,
-    invalidLabel = '',
-    emptyLabel,
-    labelFunc,
-  }: Pick<DateInputProps, 'format' | 'invalidLabel' | 'emptyLabel' | 'labelFunc'>
+  format: string,
+  utils: IUtils<any>,
+  isEmpty: boolean,
+  { invalidLabel, emptyLabel, labelFunc }: Omit<BasePickerProps, 'value' | 'onChange'>
 ) => {
   const date = utils.date(value);
-  const isEmpty = value === null;
-
   if (labelFunc) {
     return labelFunc(isEmpty ? null : date, invalidLabel!);
   }
@@ -25,7 +20,7 @@ export const getDisplayDate = (
     return emptyLabel || '';
   }
 
-  return utils.isValid(date) ? utils.formatByString(date, format) : invalidLabel;
+  return utils.isValid(date) ? utils.format(date, format) : invalidLabel!;
 };
 
 export interface BaseValidationProps {
@@ -77,7 +72,7 @@ export const validate = (
     minDateMessage,
     invalidDateMessage,
     strictCompareDates,
-  }: Omit<DatePickerProps, 'views' | 'openTo'>
+  }: Omit<DatePickerProps, 'views' | 'openTo'> // DateTimePicker doesn't support
 ): React.ReactNode => {
   const parsedValue = utils.date(value);
 

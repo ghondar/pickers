@@ -1,11 +1,14 @@
 import { useUtils } from './useUtils';
 import { IUtils } from '@date-io/core/IUtils';
+import { MaterialUiPickersDate } from '../..';
 import { useOpenState } from './useOpenState';
-import { WrapperVariant } from '../../wrappers/Wrapper';
-import { MaterialUiPickersDate } from '../../typings/date';
 import { BasePickerProps } from '../../typings/BasePicker';
-import { validate } from '../../_helpers/text-field-helper';
+import { getDisplayDate, validate } from '../../_helpers/text-field-helper';
 import { useCallback, useDebugValue, useEffect, useMemo, useState, useRef } from 'react';
+
+export interface StateHookOptions {
+  getDefaultFormat: () => string;
+}
 
 const useValueToDate = (
   utils: IUtils<MaterialUiPickersDate>,
@@ -17,36 +20,28 @@ const useValueToDate = (
   return date && utils.isValid(date) ? date : nowRef.current;
 };
 
-function useDateValues(props: BasePickerProps) {
+function useDateValues(props: BasePickerProps, options: StateHookOptions) {
   const utils = useUtils();
   const date = useValueToDate(utils, props);
-  const format = props.format;
-
-  if (!format) {
-    throw new Error('format prop is required');
-  }
+  const format = props.format || options.getDefaultFormat();
 
   return { date, format };
 }
 
-export function usePickerState(props: BasePickerProps) {
-  const { autoOk, disabled, readOnly, onAccept, onChange, onError, value } = props;
+export function usePickerState(props: BasePickerProps, options: StateHookOptions) {
+  const { autoOk, disabled, onAccept, onChange, onError, value, variant } = props;
 
   const utils = useUtils();
-  const { date, format } = useDateValues(props);
+  const { isOpen, setIsOpen } = useOpenState(props);
+  const { date, format } = useDateValues(props, options);
   const [pickerDate, setPickerDate] = useState(date);
 
-  // Mobile keyboard view is a special case.
-  // When it's open picker should work like closed, cause we are just showing text field
-  const [isMobileKeyboardViewOpen, setMobileKeyboardViewOpen] = useState(false);
-  const { isOpen, setIsOpen } = useOpenState(props);
-
   useEffect(() => {
-    // if value was changed in closed state or from mobile keyboard view - treat it as accepted
-    if ((!isOpen || isMobileKeyboardViewOpen) && !utils.isEqual(pickerDate, date)) {
+    // if value was changed in closed state - treat it as accepted
+    if (!isOpen && !utils.isEqual(pickerDate, date)) {
       setPickerDate(date);
     }
-  }, [date, isMobileKeyboardViewOpen, isOpen, pickerDate, utils]);
+  }, [date, isOpen, pickerDate, utils]);
 
   const acceptDate = useCallback(
     (acceptedDate: MaterialUiPickersDate) => {
@@ -67,7 +62,9 @@ export function usePickerState(props: BasePickerProps) {
       onClear: () => acceptDate(null),
       onAccept: () => acceptDate(pickerDate),
       onSetToday: () => setPickerDate(utils.date()),
-      onDismiss: () => setIsOpen(false),
+      onDismiss: () => {
+        setIsOpen(false);
+      },
     }),
     [acceptDate, format, isOpen, pickerDate, setIsOpen, utils]
   );
@@ -75,20 +72,7 @@ export function usePickerState(props: BasePickerProps) {
   const pickerProps = useMemo(
     () => ({
       date: pickerDate,
-      isMobileKeyboardViewOpen,
-      toggleMobileKeyboardView: () => {
-        if (!isMobileKeyboardViewOpen) {
-          // accept any partial input done by user
-          setPickerDate(pickerDate);
-        }
-
-        setMobileKeyboardViewOpen(!isMobileKeyboardViewOpen);
-      },
-      onDateChange: (
-        newDate: MaterialUiPickersDate,
-        currentVariant: WrapperVariant,
-        isFinish = true
-      ) => {
+      onChange: (newDate: MaterialUiPickersDate, isFinish = true) => {
         setPickerDate(newDate);
 
         if (isFinish && autoOk) {
@@ -97,41 +81,34 @@ export function usePickerState(props: BasePickerProps) {
         }
 
         // simulate autoOk, but do not close the modal
-        if (currentVariant === 'desktop' || currentVariant === 'static') {
+        if (variant === 'inline' || variant === 'static') {
           onChange(newDate);
           onAccept && onAccept(newDate);
         }
       },
     }),
-    [acceptDate, autoOk, isMobileKeyboardViewOpen, onAccept, onChange, pickerDate]
+    [acceptDate, autoOk, onAccept, onChange, pickerDate, variant]
   );
 
-  const validationError = validate(value, utils, props as any);
+  const validationError = validate(value, utils, props);
   useEffect(() => {
     if (onError) {
       onError(validationError, value);
     }
   }, [onError, validationError, value]);
 
+  const inputValue = getDisplayDate(date, format, utils, value === null, props);
   const inputProps = useMemo(
     () => ({
-      onChange,
-      format,
-      rawValue: value,
+      inputValue,
       validationError,
-      openPicker: () => !readOnly && !disabled && setIsOpen(true),
+      openPicker: () => !disabled && setIsOpen(true),
     }),
-    [disabled, format, onChange, readOnly, setIsOpen, validationError, value]
+    [disabled, inputValue, setIsOpen, validationError]
   );
 
   const pickerState = { pickerProps, inputProps, wrapperProps };
-  useDebugValue(pickerState, () => ({
-    MuiPickerState: {
-      pickerDate,
-      parsedDate: date,
-      other: pickerState,
-    },
-  }));
 
+  useDebugValue(pickerState);
   return pickerState;
 }

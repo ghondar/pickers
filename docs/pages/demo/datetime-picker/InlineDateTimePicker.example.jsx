@@ -1,28 +1,22 @@
 import React, { useState } from 'react';
-import { MobileDateTimePicker, DesktopDateTimePicker, DateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker, KeyboardDateTimePicker } from '@ghondar/pickers';
 
-function DateTimePickerDemo(props) {
+function InlineDateTimePickerDemo(props) {
   const [selectedDate, handleDateChange] = useState(new Date('2018-01-01T00:00:00.000Z'));
 
   return (
     <>
-      <MobileDateTimePicker
-        autoOk
-        disableFuture
-        value={selectedDate}
-        onChange={handleDateChange}
-        label="24h clock"
-      />
-
-      <DesktopDateTimePicker
-        ampm
-        disablePast
-        ampmInClock
-        value={selectedDate}
-        onChange={handleDateChange}
-      />
-
       <DateTimePicker
+        variant="inline"
+        label="Basic example"
+        value={selectedDate}
+        onChange={handleDateChange}
+      />
+
+      <KeyboardDateTimePicker
+        variant="inline"
+        ampm={false}
+        label="With keyboard"
         value={selectedDate}
         onChange={handleDateChange}
         onError={console.log}
@@ -36,4 +30,4 @@ function DateTimePickerDemo(props) {
   );
 }
 
-export default DateTimePickerDemo;
+export default InlineDateTimePickerDemo;

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { TimePicker } from '@material-ui/pickers';
+import { KeyboardTimePicker } from '@ghondar/pickers';
 
 function KeyboardTimePickerExample() {
   const [selectedDate, handleDateChange] = useState(new Date());
 
   return (
-    <TimePicker
-      ampm
+    <KeyboardTimePicker
       label="Masked timepicker"
       placeholder="08:00 AM"
       mask="__:__ _M"

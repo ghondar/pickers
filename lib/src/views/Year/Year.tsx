@@ -3,75 +3,75 @@ import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
-export interface MonthProps {
+export interface YearProps {
   children: React.ReactNode;
   disabled?: boolean;
   onSelect: (value: any) => void;
   selected?: boolean;
   value: any;
+  forwardedRef?: React.Ref<HTMLElement | null>;
 }
 
 export const useStyles = makeStyles(
   theme => ({
     root: {
-      flex: '1 0 33.33%',
+      height: 40,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
       outline: 'none',
-      height: 64,
-      transition: theme.transitions.create('font-size', { duration: '100ms' }),
       '&:focus': {
         color: theme.palette.primary.main,
         fontWeight: theme.typography.fontWeightMedium,
       },
     },
-    monthSelected: {
-      color: theme.palette.primary.main,
+    yearSelected: {
+      margin: '10px 0',
       fontWeight: theme.typography.fontWeightMedium,
     },
-    monthDisabled: {
+    yearDisabled: {
       pointerEvents: 'none',
       color: theme.palette.text.hint,
     },
   }),
-  { name: 'MuiPickersMonth' }
+  { name: 'MuiPickersYear' }
 );
 
-export const Month: React.FC<MonthProps> = ({
-  selected,
+export const Year: React.FC<YearProps> = ({
   onSelect,
-  disabled,
+  forwardedRef,
   value,
+  selected,
+  disabled,
   children,
   ...other
 }) => {
   const classes = useStyles();
-  const handleSelection = React.useCallback(() => {
-    onSelect(value);
-  }, [onSelect, value]);
+  const handleClick = React.useCallback(() => onSelect(value), [onSelect, value]);
 
   return (
     <Typography
-      data-mui-test="month"
       role="button"
       component="div"
-      className={clsx(classes.root, {
-        [classes.monthSelected]: selected,
-        [classes.monthDisabled]: disabled,
-      })}
       tabIndex={disabled ? -1 : 0}
-      onClick={handleSelection}
-      onKeyPress={handleSelection}
+      onClick={handleClick}
+      onKeyPress={handleClick}
       color={selected ? 'primary' : undefined}
       variant={selected ? 'h5' : 'subtitle1'}
       children={children}
+      ref={forwardedRef}
+      className={clsx(classes.root, {
+        [classes.yearSelected]: selected,
+        [classes.yearDisabled]: disabled,
+      })}
       {...other}
     />
   );
 };
 
-Month.displayName = 'Month';
+Year.displayName = 'Year';
 
-export default Month;
+export default React.forwardRef<HTMLElement, YearProps>((props, ref) => (
+  <Year {...props} forwardedRef={ref} />
+));

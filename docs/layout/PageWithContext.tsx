@@ -7,11 +7,10 @@ import { SnackbarProvider } from 'notistack';
 import { setPrismTheme } from '../utils/prism';
 import { PageContext } from '../utils/getPageContext';
 import { UtilsContext } from '../_shared/UtilsServiceContext';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { NotificationManager } from 'utils/NotificationManager';
+import { MuiPickersUtilsProvider } from '@ghondar/pickers';
 import { Theme, createMuiTheme, CssBaseline } from '@material-ui/core';
+import { ThemeProvider, jssPreset, StylesProvider } from '@material-ui/styles';
 import { createUtilsService, UtilsLib, utilsMap } from '../utils/utilsService';
-import { ThemeProvider, jssPreset, StylesProvider } from '@material-ui/core/styles';
 
 export type ThemeType = 'light' | 'dark';
 export type Direction = Theme['direction'];
@@ -97,13 +96,12 @@ export const PageWithContexts: React.SFC<Props> = ({
       sheetsRegistry={pageContext.sheetsRegistry}
       generateClassName={pageContext.generateClassName}
     >
-      <ThemeProvider theme={muiTheme}>
-        <SnackbarProvider maxSnack={3}>
+      <SnackbarProvider maxSnack={3}>
+        <ThemeProvider theme={muiTheme}>
           <MuiPickersUtilsProvider utils={utilsMap[lib]}>
             <ThemeContext.Provider value={theme}>
               <UtilsContext.Provider value={createUtilsService(lib)}>
                 <CssBaseline />
-                <NotificationManager />
 
                 <Layout
                   children={children}
@@ -114,8 +112,8 @@ export const PageWithContexts: React.SFC<Props> = ({
               </UtilsContext.Provider>
             </ThemeContext.Provider>
           </MuiPickersUtilsProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </SnackbarProvider>
     </StylesProvider>
   );
 };

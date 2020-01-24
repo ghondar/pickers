@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { TimePicker } from '@material-ui/pickers';
+import { TimePicker } from '@ghondar/pickers';
 
 function SecondsTimePicker() {
   const [selectedDate, handleDateChange] = useState(new Date());
@@ -13,17 +13,17 @@ function SecondsTimePicker() {
         format="HH:mm:ss"
         label="With seconds"
         value={selectedDate}
-        onChange={date => handleDateChange(date)}
+        onChange={handleDateChange}
       />
 
       <TimePicker
-        ampmInClock
+        ampm={false}
         openTo="minutes"
         views={['minutes', 'seconds']}
         format="mm:ss"
         label="Minutes and seconds"
         value={selectedDate}
-        onChange={date => handleDateChange(date)}
+        onChange={handleDateChange}
       />
     </Fragment>
   );

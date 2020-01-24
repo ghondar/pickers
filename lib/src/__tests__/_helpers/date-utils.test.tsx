@@ -2,10 +2,10 @@ import { utilsToUse } from '../test-utils';
 import { findClosestEnabledDate } from '../../_helpers/date-utils';
 
 describe('findClosestEnabledDate', () => {
-  const day18thText = utilsToUse.format(utilsToUse.date('2018-08-18'), 'dayOfMonth');
-  const only18th = (date: any) => utilsToUse.format(date, 'dayOfMonth') !== day18thText;
+  const day18thText = utilsToUse.getDayText(utilsToUse.date('2018-08-18'));
+  const only18th = (date: any) => utilsToUse.getDayText(date) !== day18thText;
 
-  it('Should fallback to today if all dates are disabled', () => {
+  it('Should return null if all dates are disabled', () => {
     const result = findClosestEnabledDate({
       date: utilsToUse.date('2000-01-01'),
       minDate: utilsToUse.date('1999-01-01'), // Use close-by min/max dates to reduce the test runtime.
@@ -16,7 +16,7 @@ describe('findClosestEnabledDate', () => {
       disablePast: false,
     });
 
-    expect(utilsToUse.isEqual(result, utilsToUse.date()));
+    expect(result).toBe(null);
   });
 
   it('Should return given date if it is enabled', () => {
@@ -73,25 +73,27 @@ describe('findClosestEnabledDate', () => {
       disablePast: true,
     });
 
+    expect(utilsToUse.getDayText(result)).toBe(day18thText);
     expect(utilsToUse.isBefore(result, today)).toBe(false);
     expect(utilsToUse.isBefore(result, utilsToUse.addDays(today, 31))).toBe(true);
   });
 
-  // it('Should return past Saturday if disableFuture', () => {
-  //   const today = utilsToUse.startOfDay(utilsToUse.date());
-  //   const result = findClosestEnabledDate({
-  //     date: utilsToUse.date('2099-01-01'),
-  //     minDate: utilsToUse.date('1900-01-01'),
-  //     maxDate: utilsToUse.date('2100-01-01'),
-  //     utils: utilsToUse,
-  //     shouldDisableDate: only18th,
-  //     disableFuture: true,
-  //     disablePast: false,
-  //   });
+  it('Should return past Saturday if disableFuture', () => {
+    const today = utilsToUse.startOfDay(utilsToUse.date());
+    const result = findClosestEnabledDate({
+      date: utilsToUse.date('2099-01-01'),
+      minDate: utilsToUse.date('1900-01-01'),
+      maxDate: utilsToUse.date('2100-01-01'),
+      utils: utilsToUse,
+      shouldDisableDate: only18th,
+      disableFuture: true,
+      disablePast: false,
+    });
 
-  //   expect(utilsToUse.isBeforeDay(result, today)).toBe(true);
-  //   expect(utilsToUse.isBefore(result, utilsToUse.addDays(today, -31))).toBe(false);
-  // });
+    expect(utilsToUse.isBeforeDay(result, today)).toBe(true);
+    expect(utilsToUse.getDayText(result)).toBe(day18thText);
+    expect(utilsToUse.isBefore(result, utilsToUse.addDays(today, -31))).toBe(false);
+  });
 
   it('Should return now if disablePast+disableFuture and now is valid', () => {
     const today = utilsToUse.startOfDay(utilsToUse.date());
@@ -108,7 +110,7 @@ describe('findClosestEnabledDate', () => {
     expect(utilsToUse.isSameDay(result, today)).toBe(true);
   });
 
-  it('Should fallback to today if disablePast+disableFuture and now is invalid', () => {
+  it('Should return null if disablePast+disableFuture and now is invalid', () => {
     const today = utilsToUse.date();
     const result = findClosestEnabledDate({
       date: utilsToUse.date('2000-01-01'),
@@ -120,7 +122,7 @@ describe('findClosestEnabledDate', () => {
       disablePast: true,
     });
 
-    expect(utilsToUse.isEqual(result, utilsToUse.date()));
+    expect(result).toBeNull();
   });
 
   it('Should return minDate if it is after the date and valid', () => {
@@ -179,7 +181,7 @@ describe('findClosestEnabledDate', () => {
     expect(utilsToUse.isSameDay(result, utilsToUse.date('2018-07-18'))).toBe(true);
   });
 
-  it('Should fallback to today if minDate is after maxDate', () => {
+  it('Should return null if minDate is after maxDate', () => {
     const result = findClosestEnabledDate({
       date: utilsToUse.date('2000-01-01'),
       minDate: utilsToUse.date('2000-01-01'),
@@ -190,6 +192,6 @@ describe('findClosestEnabledDate', () => {
       disablePast: false,
     });
 
-    expect(utilsToUse.isEqual(result, utilsToUse.date()));
+    expect(result).toBeNull();
   });
 });

@@ -2,13 +2,13 @@ import React from 'react';
 import Code from '../../_shared/Code';
 import { Grid } from '@material-ui/core';
 import { Formik, Form, Field } from 'formik';
-import { DatePicker } from '@material-ui/pickers';
+import { KeyboardDatePicker } from '@ghondar/pickers';
 
 const DatePickerField = ({ field, form, ...other }) => {
   const currentError = form.errors[field.name];
 
   return (
-    <DatePicker
+    <KeyboardDatePicker
       clearable
       disablePast
       name={field.name}

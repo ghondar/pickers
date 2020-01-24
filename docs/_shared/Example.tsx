@@ -5,13 +5,13 @@ import CodeIcon from '@material-ui/icons/Code';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import GithubIcon from '_shared/svgIcons/GithubIcon';
 import { copy } from 'utils/helpers';
-import { useSnackbar } from 'notistack';
 import { GITHUB_EDIT_URL } from '_constants';
 import { replaceGetFormatStrings } from 'utils/utilsService';
+import { withSnackbar, InjectedNotistackProps } from 'notistack';
 import { withUtilsService, UtilsContext } from './UtilsServiceContext';
 import { makeStyles, IconButton, Collapse, Tooltip } from '@material-ui/core';
 
-interface ExampleProps {
+interface Props extends InjectedNotistackProps {
   testId: string;
   paddingBottom?: boolean;
   source: { raw: string; relativePath: string; default: React.FC<any> };
@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Example({ source, testId, paddingBottom }: ExampleProps) {
+function Example({ source, testId, paddingBottom, enqueueSnackbar }: Props) {
   if (!source.default || !source.raw || !source.relativePath) {
     throw new Error(
       'Missing component or raw component code, you likely forgot to .example to your example extension'
@@ -73,7 +73,6 @@ function Example({ source, testId, paddingBottom }: ExampleProps) {
   }
 
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
   const currentLib = React.useContext(UtilsContext).lib;
   const [expanded, setExpanded] = React.useState(false);
 
@@ -125,7 +124,7 @@ function Example({ source, testId, paddingBottom }: ExampleProps) {
       </Collapse>
 
       <div
-        data-mui-test={testId}
+        data-test-id={testId}
         className={clsx(classes.pickers, { [classes.paddingBottom]: paddingBottom })}
       >
         <Tooltip title="Show/Hide the source">
@@ -140,4 +139,4 @@ function Example({ source, testId, paddingBottom }: ExampleProps) {
   );
 }
 
-export default Example;
+export default withSnackbar(Example);

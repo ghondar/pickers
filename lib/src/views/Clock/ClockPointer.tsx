@@ -1,7 +1,8 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { ClockViewType } from '../../constants/ClockType';
-import { withStyles, createStyles, Theme, WithStyles } from '@material-ui/core/styles';
+import ClockType, { ClockViewType } from '../../constants/ClockType';
+import { Theme } from '@material-ui/core/styles';
+import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
 
 export interface ClockPointerProps extends WithStyles<typeof styles> {
   value: number;
@@ -36,10 +37,10 @@ export class ClockPointer extends React.Component<ClockPointerProps> {
   public getAngleStyle = () => {
     const { value, isInner, type } = this.props;
 
-    const max = type === 'hours' ? 12 : 60;
+    const max = type === ClockType.HOURS ? 12 : 60;
     let angle = (360 / max) * value;
 
-    if (type === 'hours' && value > 12) {
+    if (type === ClockType.HOURS && value > 12) {
       angle -= 360; // round up angle to max 360 degrees
     }
 

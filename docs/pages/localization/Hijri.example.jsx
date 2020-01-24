@@ -1,12 +1,7 @@
 import moment from 'moment';
 import React, { useState } from 'react';
 import HijriUtils from '@date-io/hijri';
-import {
-  TimePicker,
-  DateTimePicker,
-  DatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+import { TimePicker, DateTimePicker, DatePicker, MuiPickersUtilsProvider } from '@ghondar/pickers';
 import 'moment/locale/ar-sa';
 
 function HijriExample() {

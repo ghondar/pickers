@@ -2,13 +2,11 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import ModalDialog from '../_shared/ModalDialog';
 import { WrapperProps } from './Wrapper';
-import { PureDateInput } from '../_shared/PureDateInput';
-import { InnerDesktopWrapperProps } from './DesktopWrapper';
-import { WrapperVariantContext } from './WrapperVariantContext';
-import { useKeyDownHandler } from '../_shared/hooks/useKeyDown';
+import { Omit } from '../_helpers/utils';
+import { useKeyDown } from '../_shared/hooks/useKeyDown';
 import { DialogProps as MuiDialogProps } from '@material-ui/core/Dialog';
 
-export interface InnerMobileWrapperProps {
+export interface ModalWrapperProps<T = {}> extends WrapperProps<T> {
   /**
    * "OK" label message
    * @default "OK"
@@ -46,12 +44,7 @@ export interface InnerMobileWrapperProps {
   DialogProps?: Partial<Omit<MuiDialogProps, 'classes'>>;
 }
 
-export interface MobileWrapperProps
-  extends InnerMobileWrapperProps,
-    WrapperProps,
-    Partial<InnerDesktopWrapperProps> {}
-
-export const MobileWrapper: React.FC<MobileWrapperProps> = ({
+export const ModalWrapper: React.FC<ModalWrapperProps<any>> = ({
   open,
   children,
   okLabel,
@@ -63,24 +56,23 @@ export const MobileWrapper: React.FC<MobileWrapperProps> = ({
   DialogProps,
   showTabs,
   wider,
+  InputComponent,
   DateInputProps,
   onClear,
   onAccept,
   onDismiss,
   onSetToday,
-  PopoverProps,
   ...other
 }) => {
-  const handleKeyDown = useKeyDownHandler(open, {
-    13: onAccept, // Enter
+  useKeyDown(open, {
+    Enter: onAccept,
   });
 
   return (
-    <WrapperVariantContext.Provider value="mobile">
-      <PureDateInput {...other} {...DateInputProps} />
+    <React.Fragment>
+      <InputComponent {...other} {...DateInputProps} />
 
       <ModalDialog
-        onKeyDown={handleKeyDown}
         wider={wider}
         showTabs={showTabs}
         open={open}
@@ -95,14 +87,13 @@ export const MobileWrapper: React.FC<MobileWrapperProps> = ({
         clearable={clearable}
         showTodayButton={showTodayButton}
         children={children}
-        data-mui-test="mobile-wrapper-dialog"
         {...DialogProps}
       />
-    </WrapperVariantContext.Provider>
+    </React.Fragment>
   );
 };
 
-MobileWrapper.propTypes = {
+ModalWrapper.propTypes = {
   okLabel: PropTypes.node,
   cancelLabel: PropTypes.node,
   clearLabel: PropTypes.node,
@@ -112,7 +103,7 @@ MobileWrapper.propTypes = {
   DialogProps: PropTypes.object,
 } as any;
 
-MobileWrapper.defaultProps = {
+ModalWrapper.defaultProps = {
   okLabel: 'OK',
   cancelLabel: 'Cancel',
   clearLabel: 'Clear',

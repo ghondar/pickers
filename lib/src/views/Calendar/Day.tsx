@@ -1,58 +1,40 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { ButtonBase } from '@material-ui/core';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles(
   theme => ({
     day: {
-      margin: '1px 2px',
       width: 36,
       height: 36,
-      borderRadius: '50%',
-      padding: 0,
-      color: theme.palette.text.primary,
       fontSize: theme.typography.caption.fontSize,
+      margin: '0 2px',
+      color: theme.palette.text.primary,
       fontWeight: theme.typography.fontWeightMedium,
-      '&:focus': {
-        backgroundColor: fade(theme.palette.action.active, theme.palette.action.hoverOpacity),
-      },
-      '&:hover': {
-        backgroundColor: fade(theme.palette.action.active, theme.palette.action.hoverOpacity),
-      },
+      padding: 0,
     },
     hidden: {
       opacity: 0,
       pointerEvents: 'none',
     },
     current: {
-      '&:not($daySelected)': {
-        border: `1px solid ${theme.palette.text.hint}`,
-      },
+      color: theme.palette.primary.main,
+      fontWeight: 600,
     },
     daySelected: {
       color: theme.palette.primary.contrastText,
       backgroundColor: theme.palette.primary.main,
       fontWeight: theme.typography.fontWeightMedium,
-      transition: theme.transitions.create('background-color', {
-        duration: theme.transitions.duration.short,
-      }),
       '&:hover': {
-        willChange: 'background-color',
-        backgroundColor: theme.palette.primary.light,
-      },
-      '&:focus': {
-        willChange: 'background-color',
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
       },
     },
     dayDisabled: {
       pointerEvents: 'none',
       color: theme.palette.text.hint,
-    },
-    dayLabel: {
-      // need for overrides
     },
   }),
   { name: 'MuiPickersDay' }
@@ -61,7 +43,7 @@ export const useStyles = makeStyles(
 export interface DayProps {
   /** Day text */
   children: React.ReactNode;
-  /** Is today? */
+  /** Is today */
   current?: boolean;
   /** Disabled? */
   disabled?: boolean;
@@ -88,15 +70,11 @@ export const Day: React.FC<DayProps> = ({
   });
 
   return (
-    <ButtonBase
-      data-mui-test="day"
-      centerRipple
-      className={className}
-      tabIndex={hidden || disabled ? -1 : 0}
-      {...other}
-    >
-      <span className={classes.dayLabel}>{children}</span>
-    </ButtonBase>
+    <IconButton className={className} tabIndex={hidden || disabled ? -1 : 0} {...other}>
+      <Typography variant="body2" color="inherit">
+        {children}
+      </Typography>
+    </IconButton>
   );
 };
 

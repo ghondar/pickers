@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
-import { DatePicker } from '@material-ui/pickers';
+import React, { Fragment, useState } from 'react';
+import { DatePicker } from '@ghondar/pickers';
 
-function BasicDatePicker() {
+function BasicDatePicker(props) {
   const [selectedDate, handleDateChange] = useState(new Date());
 
   return (
-    <DatePicker
-      label="Basic example"
-      value={selectedDate}
-      // DialogProps={{ 'aria-activedescendant': '12' }}
-      onChange={date => handleDateChange(date)}
-    />
+    <Fragment>
+      <DatePicker
+        label="Basic example"
+        value={selectedDate}
+        onChange={handleDateChange}
+        animateYearScrolling
+      />
+
+      <DatePicker
+        autoOk
+        label="Clearable"
+        clearable
+        disableFuture
+        value={selectedDate}
+        onChange={handleDateChange}
+      />
+
+      <DatePicker
+        disableFuture
+        openTo="year"
+        format={props.__willBeReplacedGetFormatString({
+          moment: 'DD/MM/YYYY',
+          dateFns: 'dd/MM/yyyy',
+        })}
+        label="Date of birth"
+        views={['year', 'month', 'date']}
+        value={selectedDate}
+        onChange={handleDateChange}
+      />
+    </Fragment>
   );
 }
 

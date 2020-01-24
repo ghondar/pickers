@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
-import { StaticDatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@ghondar/pickers';
 
-const StaticDatePickerExample = () => {
-  const [date, handleDateChange] = useState(new Date());
+const StaticDatePicker = () => {
+  const [date, changeDate] = useState(new Date());
 
+  // prettier-ignore
   return (
     <>
-      <StaticDatePicker
+      <DatePicker
         autoOk
+        variant="static"
         openTo="year"
         value={date}
-        onChange={date => handleDateChange(date)}
+        onChange={changeDate}
       />
 
-      <StaticDatePicker
+      <DatePicker
         autoOk
         orientation="landscape"
+        variant="static"
         openTo="date"
         value={date}
-        onChange={date => handleDateChange(date)}
+        onChange={changeDate}
       />
     </>
   );
 };
 
-export default StaticDatePickerExample;
+export default StaticDatePicker;

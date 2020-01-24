@@ -16,7 +16,7 @@ assignees: ''
 
 | Tech                 | Version |
 | -------------------- | ------- |
-| @material-ui/pickers |         |
+| @ghondar/pickers |         |
 | material-ui          |         |
 | TypeScript           |         |
 | React                |         |

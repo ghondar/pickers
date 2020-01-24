@@ -1,21 +1,33 @@
 import React, { Fragment, useState } from 'react';
-import { DateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@ghondar/pickers';
 
 function BasicDateTimePicker() {
   const [selectedDate, handleDateChange] = useState(new Date());
-  const limits = {
-    15: [[3, 5, 6, 7]],
-  };
 
   return (
     <Fragment>
       <DateTimePicker
-        mask="____/__/__ __:__"
         label="DateTimePicker"
-        variant="outlined"
-        limits={limits}
+        inputVariant="outlined"
         value={selectedDate}
         onChange={handleDateChange}
+      />
+
+      <DateTimePicker
+        autoOk
+        ampm={false}
+        disableFuture
+        value={selectedDate}
+        onChange={handleDateChange}
+        label="24h clock"
+      />
+
+      <DateTimePicker
+        value={selectedDate}
+        disablePast
+        onChange={handleDateChange}
+        label="With Today Button"
+        showTodayButton
       />
     </Fragment>
   );

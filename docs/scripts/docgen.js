@@ -23,8 +23,7 @@ const doc = {};
 const srcPath = path.resolve(__dirname, '..', '..', 'lib', 'src');
 
 const components = [
-  'wrappers/MobileWrapper.tsx',
-  'wrappers/DesktopWrapper.tsx',
+  'wrappers/ModalWrapper.tsx',
   'DatePicker/DatePicker.tsx',
   'DatePicker/KeyboardDatePicker.tsx',
   'TimePicker/TimePicker.tsx',
@@ -75,13 +74,6 @@ components.forEach(filePart => {
   const parsedDocs = parser.parse(file);
 
   parsedDocs.forEach(parsedDoc => {
-    if (
-      parsedDoc.displayName.match(/^(Mobile|Desktop|Static)/) &&
-      !parsedDoc.displayName.endsWith('Wrapper')
-    ) {
-      return;
-    }
-
     if (Object.keys(parsedDoc.props).length === 0) {
       return;
     }

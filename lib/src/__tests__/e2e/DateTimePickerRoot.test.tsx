@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ReactWrapper } from 'enzyme';
 import { clickOKButton } from './commands';
 import { mount, utilsToUse, toHaveBeenCalledExceptMoment } from '../test-utils';
-import { MobileDateTimePicker, DateTimePickerProps } from '../../DateTimePicker/DateTimePicker';
+import { DateTimePicker, DateTimePickerProps } from '../../DateTimePicker/DateTimePicker';
 
 describe('e2e - DateTimePicker', () => {
   let component: ReactWrapper<DateTimePickerProps>;
@@ -11,12 +11,11 @@ describe('e2e - DateTimePicker', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     component = mount(
-      <MobileDateTimePicker
-        ampm
+      <DateTimePicker
         open
-        openTo="hours"
         value={utilsToUse.date('2018-01-01T00:00:00.000Z')}
         onChange={onChangeMock}
+        openTo="hours"
         leftArrowIcon="keyboard_arrow_left"
         rightArrowIcon="keyboard_arrow_right"
         dateRangeIcon="date_range"
@@ -50,8 +49,7 @@ describe('e2e - DateTimePicker', () => {
       .find('ToolbarButton')
       .at(2)
       .simulate('click');
-
-    expect(component.find('ClockView').props().type).toBe('hours');
+    expect(component.find('TimePickerView').props().type).toBe('hours');
   });
 
   it('Should render minutes view', () => {
@@ -59,11 +57,14 @@ describe('e2e - DateTimePicker', () => {
       .find('ToolbarButton')
       .at(3)
       .simulate('click');
-    expect(component.find('ClockView').props().type).toBe('minutes');
+    expect(component.find('TimePickerView').props().type).toBe('minutes');
   });
 
   // it('Should change meridiem', () => {
-  //   component.find('button[data-mui-test="in-clock-pm-btn"]').simulate('click');
+  //   component
+  //     .find('ToolbarButton')
+  //     .at(5)
+  //     .simulate('click');
 
   //   clickOKButton(component);
   //   toHaveBeenCalledExceptMoment(onChangeMock, [utilsToUse.date('2018-01-01T12:00:00.000Z')]);
