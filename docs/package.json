@@ -56,7 +56,7 @@
     "moment": "^2.24.0",
     "moment-hijri": "^2.1.2",
     "moment-jalaali": "^0.8.3",
-    "next": "8.0.4",
+    "next": "9.3.3",
     "next-cookies": "1.1.0",
     "next-images": "^1.0.4",
     "next-transpile-modules": "^2.0.0",
